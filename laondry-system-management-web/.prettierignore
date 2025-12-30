@@ -1,0 +1,19 @@
+# dependencies
+node_modules
+# builds
+.next
+out
+dist
+build
+coverage
+# env & caches
+.env*
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+.eslintcache
+# assets
+public/**/*.min.*
+public/**/*.map
+# generated
+*.snap
