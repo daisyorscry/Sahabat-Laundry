@@ -20,9 +20,11 @@ services:
         GROUP_ID: ${HOST_GID:-1000}
     image: 'laravel/app:latest'
     user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    env_file:
+      - .env
     depends_on:
       pgbouncer:
-        condition: service_started
+        condition: service_healthy
       redis:
         condition: service_healthy
     ulimits:
@@ -72,12 +74,19 @@ services:
     image: bitnamilegacy/pgbouncer:latest
     restart: unless-stopped
     logging: *default-logging
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    security_opt:
+      - no-new-privileges:true
     depends_on:
       pgsql:
         condition: service_healthy
     environment:
       POSTGRESQL_HOST: pgsql
       POSTGRESQL_PORT: 5432
+      PGBOUNCER_PORT: 6432
       PGBOUNCER_DATABASE: '${DB_DATABASE}'
       POSTGRESQL_USERNAME: '${DB_USERNAME}'
       POSTGRESQL_PASSWORD: '${DB_PASSWORD}'
@@ -88,6 +97,9 @@ services:
       PGBOUNCER_USERLIST: '"${DB_USERNAME}" "${DB_PASSWORD}"'
     networks:
       - stack
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h localhost -p 6432 -U ${DB_USERNAME}"]
+      <<: *default-healthcheck
 
   redis:
     image: 'redis:7-alpine'
