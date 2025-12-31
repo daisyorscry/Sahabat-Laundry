@@ -23,6 +23,8 @@ services:
     depends_on:
       pgbouncer:
         condition: service_started
+      redis:
+        condition: service_healthy
     ulimits:
       nofile:
         soft: 65536
@@ -87,6 +89,33 @@ services:
     networks:
       - stack
 
+  redis:
+    image: 'redis:7-alpine'
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    command: [
+      "redis-server",
+      "--requirepass", "${REDIS_PASSWORD}",
+      "--maxmemory", "${REDIS_MAXMEMORY:-512mb}",
+      "--maxmemory-policy", "allkeys-lru",
+      "--save", "900 1",
+      "--save", "300 10",
+      "--save", "60 10000"
+    ]
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - 'stack-redis:/data'
+    networks:
+      - stack
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "redis-cli", "--pass", "${REDIS_PASSWORD}", "ping"]
+      <<: *default-healthcheck
+    restart: unless-stopped
+
 networks:
   stack:
     driver: bridge
@@ -95,4 +124,6 @@ networks:
 
 volumes:
   stack-pgsql:
+    driver: local
+  stack-redis:
     driver: local
