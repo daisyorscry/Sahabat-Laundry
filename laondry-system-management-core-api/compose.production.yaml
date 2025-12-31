@@ -14,7 +14,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Swoole.Dockerfile
       args:
         USER_ID: ${HOST_UID:-1000}
         GROUP_ID: ${HOST_GID:-1000}
