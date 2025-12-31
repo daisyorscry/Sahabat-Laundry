@@ -23,6 +23,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'reject.empty' => RejectEmptyJson::class,
             'role' => RequireRole::class
         ]);
+
+        // Enable CORS for API routes
+        $middleware->api(prepend: [
+            \Fruitcake\Cors\HandleCors::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
