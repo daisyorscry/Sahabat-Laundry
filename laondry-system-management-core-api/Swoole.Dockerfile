@@ -54,7 +54,6 @@ RUN apt-get update; \
     ca-certificates \
     supervisor \
     libsodium-dev \
-    && curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr bash \
     && install-php-extensions \
     apcu \
     bz2 \
@@ -117,10 +116,6 @@ RUN composer install \
     --no-progress \
     --audit
 
-COPY --link package.json bun.lock* ./
-
-RUN bun install --frozen-lockfile
-
 COPY --link . .
 
 RUN mkdir -p \
@@ -133,8 +128,6 @@ RUN mkdir -p \
 RUN composer dump-autoload \
     --optimize \
     --apcu
-
-RUN bun run build
 
 USER ${USER}
 
