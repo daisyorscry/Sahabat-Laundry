@@ -117,8 +117,6 @@ RUN composer install \
     --no-progress \
     --audit
 
-RUN composer require fakerphp/faker --dev
-
 COPY --link package.json bun.lock* ./
 
 RUN bun install --frozen-lockfile

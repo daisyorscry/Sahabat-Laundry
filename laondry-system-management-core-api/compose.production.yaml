@@ -43,7 +43,7 @@ services:
     logging: *default-logging
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "--fail", "--max-time", "10", "localhost:8000/up"]
+      test: ["CMD", "curl", "--fail", "--max-time", "10", "localhost:8000"]
       <<: *default-healthcheck
 
   pgsql:
