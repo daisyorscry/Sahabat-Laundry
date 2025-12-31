@@ -110,13 +110,14 @@ COPY --link deployment/healthcheck /usr/local/bin/healthcheck
 COPY --link composer.* ./
 
 RUN composer install \
-    --no-dev \
     --no-interaction \
     --no-autoloader \
     --no-ansi \
     --no-scripts \
     --no-progress \
     --audit
+
+RUN composer require fakerphp/faker --dev
 
 COPY --link package.json bun.lock* ./
 
@@ -133,8 +134,7 @@ RUN mkdir -p \
 
 RUN composer dump-autoload \
     --optimize \
-    --apcu \
-    --no-dev
+    --apcu
 
 RUN bun run build
 
