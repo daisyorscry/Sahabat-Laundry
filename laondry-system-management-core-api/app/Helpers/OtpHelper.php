@@ -18,7 +18,11 @@ class OtpHelper
             ->whereNull('invalidated_at')
             ->update(['invalidated_at' => now()]);
 
-        $otp = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        // Jika OTP dinonaktifkan, gunakan default 999999
+        $otpEnabled = config('app.otp_enable', true);
+        $otp = $otpEnabled
+            ? str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT)
+            : '999999';
 
         return UserOtp::create([
             'user_id' => $userId,

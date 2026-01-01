@@ -125,4 +125,17 @@ return [
 
     'system_user_id' => env('APP_SYSTEM_USER_ID'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | OTP Enable
+    |--------------------------------------------------------------------------
+    |
+    | This value determines whether OTP generation is enabled or disabled.
+    | When set to false, all OTP codes will use the default value of 999999.
+    | This is useful for development/testing environments.
+    |
+    */
+
+    'otp_enable' => env('OTP_ENABLE', true),
+
 ];
